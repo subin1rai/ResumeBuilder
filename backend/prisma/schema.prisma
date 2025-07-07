@@ -28,8 +28,9 @@ model Resume {
   userId         Int
   user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   title          String
-  thumbnail      String
-  color          String
+  thumbnail      String?
+  color          String?
+  updatedAt      DateTime?         @updatedAt
   Profileinfo    Profileinfo[]
   WorkExperience WorkExperience[]
   Education      Education[]
@@ -43,20 +44,23 @@ model Profileinfo {
   designation String
   summary     String
   phone       String
+  previewUrl  String
   location    String
   linkedin    String
   github      String
+  website     String
   resumeId    Int
   resume      Resume @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
 }
 
 model WorkExperience {
   id          Int      @id @default(autoincrement())
-  CompanyName String
+  companyName String
   jobTitle    String
+  role        String
   start       DateTime
   end         DateTime
-  Description String
+  description String
   resumeId    Int
   resume      Resume   @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
 }
@@ -67,7 +71,7 @@ model Education {
   degree          String
   start           DateTime
   end             DateTime
-  Description     String
+  description     String
   resumeId        Int
   resume          Resume   @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
 }

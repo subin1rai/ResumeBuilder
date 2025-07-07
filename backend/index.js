@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const createResume = require("./src/routes/resume.route.js");
+const resumeRoute = require("./src/routes/resume.route.js");
 const userRoute = require("./src/routes/user.route.js");
 
 dotenv.config("./.env");
@@ -16,7 +16,7 @@ app.use("/api/health", (req, res) => {
     res.status(200).json({ message: "Good Health" });
 });
 
-app.use("/api/resumes", createResume);
+app.use("/api/resume", resumeRoute);
 app.use("/api/auth", userRoute);
 
 const port = process.env.PORT;

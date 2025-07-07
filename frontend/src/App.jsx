@@ -1,14 +1,15 @@
-import './App.css'
-
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import UserProvider from "./context/UserContext";
 function App() {
-
   return (
-   <>
-    <h1 className="text-3xl font-bold underline bg-pink-400 ">
-    Hello world!
-  </h1>
-    </>
-  )
+    <UserProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage />} /> 
+      </Routes>
+    </UserProvider>
+  );
 }
 
-export default App
+export default App;
