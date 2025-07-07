@@ -25,11 +25,25 @@ const registerUser = async (name, email, password, confirmPassword) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
 
+  
   const user = await prisma.user.create({
     data: { name, email, password: hashPassword },
   });
 
-  return user;
+   const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        image: user.image,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "2hrs" }
+    );
+
+return {token,user};
+
 };
 
 
@@ -61,7 +75,7 @@ const loginUser = async(email, password)=>{
       process.env.JWT_SECRET,
       { expiresIn: "2hrs" }
     );
-return {user,token};
+return {token,user};
 } 
 
 module.exports = {

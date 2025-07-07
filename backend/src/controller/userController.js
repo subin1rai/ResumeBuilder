@@ -8,10 +8,11 @@ const userRegister = async (req, res) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
     //sending the data to the logical section
-    const user = await registerUser(name, email, password, confirmPassword);
+    const {token, user} = await registerUser(name, email, password, confirmPassword);
     //after success returning data;
     return res.status(201).json({
-      user: user,
+      user,
+      token,
       message: "User created successfully",
       status: 201,
     });
@@ -30,7 +31,7 @@ const login = async (req, res) => {
     const {token, user} = await loginUser(email, password);
     return res.status(200).json({
       message: "Login successful",
-    //   user,
+      user,
       token,
       status: 200,
     });
@@ -41,8 +42,14 @@ const login = async (req, res) => {
   }
 };
 
+
 const getUserProfile = async (req,res)=>{
+  console.log("profile")
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
     const user = await prisma.user.findFirst(req.user.userId);
+    console.log(user);
     if(!user) return res.status(400).json({message:"User not found!"});
 
     return res.status(200).json(user);
@@ -50,5 +57,6 @@ const getUserProfile = async (req,res)=>{
 
 module.exports = {
   userRegister,
-  login
+  login,
+  getUserProfile
 };
