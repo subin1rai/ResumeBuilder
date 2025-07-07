@@ -14,7 +14,67 @@ datasource db {
 }
 
 model User {
-  id         Int      @unique @default(autoincrement())
-  userName   String
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
   created_At DateTime @default(now())
+
+  Resume Resume[]
+}
+
+model Resume {
+  resumeId       Int              @id @default(autoincrement())
+  userId         Int
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title          String
+  thumbnail      String
+  color          String
+  Profileinfo    Profileinfo[]
+  WorkExperience WorkExperience[]
+  Education      Education[]
+  Skill          Skill[]
+}
+
+model Profileinfo {
+  id          Int    @id @default(autoincrement())
+  fullName    String
+  email       String
+  designation String
+  summary     String
+  phone       String
+  location    String
+  linkedin    String
+  github      String
+  resumeId    Int
+  resume      Resume @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
+}
+
+model WorkExperience {
+  id          Int      @id @default(autoincrement())
+  CompanyName String
+  jobTitle    String
+  start       DateTime
+  end         DateTime
+  Description String
+  resumeId    Int
+  resume      Resume   @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
+}
+
+model Education {
+  id              Int      @id @default(autoincrement())
+  institutionName String
+  degree          String
+  start           DateTime
+  end             DateTime
+  Description     String
+  resumeId        Int
+  resume          Resume   @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
+}
+
+model Skill {
+  id        Int    @id @default(autoincrement())
+  skillName String
+  resumeId  Int
+  resume    Resume @relation(fields: [resumeId], references: [resumeId], onDelete: Cascade)
 }

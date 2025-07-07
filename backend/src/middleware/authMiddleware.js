@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (roles = []) => {
+const protect = (roles = []) => {
   return (req, res, next) => {
     const authorizationHeaderValue = req.headers["authorization"];
     if (!authorizationHeaderValue || !authorizationHeaderValue.startsWith("Bearer ")) {
@@ -14,7 +14,7 @@ const authMiddleware = (roles = []) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+      req.user = decoded;
       if (roles.length && !roles.includes(req.user.role)) {
         return res.status(403).send("Forbidden");
       }
@@ -25,4 +25,4 @@ const authMiddleware = (roles = []) => {
   };
 };
 
-module.exports = authMiddleware;
+module.exports = protect;
