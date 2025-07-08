@@ -1,14 +1,19 @@
-import './App.css'
-
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import UserProvider from "./context/UserContext";
+import Dashboard from "./pages/Dashboard";
+import BuildResume from "./components/BuildResume";
 function App() {
-
   return (
-   <>
-    <h1 className="text-3xl font-bold underline bg-pink-400 ">
-    Hello world!
-  </h1>
-    </>
-  )
+    <UserProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage />} /> 
+        <Route path="/dashboard" element={<Dashboard />} /> 
+        <Route path="/resume/:resumeId" element={<BuildResume />} /> 
+      </Routes>
+    </UserProvider>
+  );
 }
 
-export default App
+export default App;
