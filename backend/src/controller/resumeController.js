@@ -124,7 +124,6 @@ const getUserResume = async (req, res) => {
 const getResumeById = async (req, res) => {
   try {
     const resumeId = req.params.id; 
-    console.log("dfsssssssssssssssssssssssssssssssssssssss", resumeId)
     const userId = req.user.userId;
 
     if (!resumeId || isNaN(resumeId)) {
