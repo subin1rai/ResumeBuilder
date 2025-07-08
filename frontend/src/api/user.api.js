@@ -1,7 +1,5 @@
 import axiosInstance from "../lib/axios";
 
-import axios from "axios";
-
 export const getUser = async () => {
   console.log("Starting getUser");
   const token = localStorage.getItem("token");

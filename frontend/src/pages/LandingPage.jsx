@@ -4,7 +4,7 @@ import { BackgroundLines } from "../components/backgroundLines";
 import Footer from "../components/Footer";
 import { FileText, Menu } from "lucide-react";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import Modal from "../components/Modal";
 import Login from "../components/login";
@@ -34,9 +34,17 @@ const LandingPage = () => {
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-3">
               {user ? (
-                <span className="font-medium text-gray-700">
-                  Hi, {user.name}
-                </span>
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="border-1 border-b-blue-400 px-4 py-2 rounded-xl mr-4"
+                  >
+                    Dasboard
+                  </Link>
+                  <span className="font-medium text-gray-700">
+                    Hi, {user.name}
+                  </span>
+                </>
               ) : (
                 <>
                   <button
@@ -197,24 +205,22 @@ const LandingPage = () => {
 
       {/* <Footer /> */}
       {/* model for login/register */}
-        {/* Auth Modal */}
-        <Modal
-          isOpen={openAuthModel}
-          onClose={() => {
-            setOpenAuthModel(false);
-            setCurrentPage("login");
-          }}
-          hideHeader
-        >
-          <div>
-            {currentPage === "login" && (
-              <Login setCurrentPage={setCurrentPage} />
-            )}
-            {currentPage === "register" && (
-              <Register setCurrentPage={setCurrentPage} />
-            )}
-          </div>
-        </Modal>
+      {/* Auth Modal */}
+      <Modal
+        isOpen={openAuthModel}
+        onClose={() => {
+          setOpenAuthModel(false);
+          setCurrentPage("login");
+        }}
+        hideHeader
+      >
+        <div>
+          {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
+          {currentPage === "register" && (
+            <Register setCurrentPage={setCurrentPage} />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
