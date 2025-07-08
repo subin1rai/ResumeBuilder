@@ -7,6 +7,6 @@ const router = express.Router();
 router.get("/", protect() ,getUserResume);
 router.post("/create", protect() ,createResume);
 router.get("/:id", protect() ,getResumeById);
-router.put("/updateResume", protect() ,updateResume);
+router.put("/updateResume/:resumeId", protect() ,updateResume);
 
 module.exports = router;

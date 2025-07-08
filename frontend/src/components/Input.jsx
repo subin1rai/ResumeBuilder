@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { EyeOff, Eye } from "lucide-react";
+import { Edit, Check } from "lucide-react";
 
 const Input = ({ value, onChange, label, placeholder, type = "text" }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,3 +37,38 @@ const Input = ({ value, onChange, label, placeholder, type = "text" }) => {
 };
 
 export default Input;
+
+
+// for build
+export const TitleInput = ({ title, setTitle }) => {
+  const [editing, setEditing] = useState(false);
+  const [focused, setFocused] = useState(false);
+  return (
+    <div className="flex items-center gap-3">
+      {editing ? (
+        <>
+          <input
+            type="text"
+            placeholder="Resume title"
+            className="text-lg sm:text-xl font-bold bg-transparent outline-none text-gray-800 border-b-2 pb-2 transition-all duration-300"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            autoFocus
+          />
+          <button className="p-2 rounded-xl bg-violet-500 hover:bg-violet-600 text-white transition-all" onClick={() => setEditing(false)}>
+            <Check className="w-5 h-5" />
+          </button>
+        </>
+      ) : (
+        <>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800">{title}</h2>
+          <button className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all group" onClick={() => setEditing(true)}>
+            <Edit className="w-5 h-5 text-gray-600 group-hover:text-violet-600 transition-colors" />
+          </button>
+        </>
+      )}
+    </div>
+  );
+};

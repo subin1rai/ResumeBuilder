@@ -102,6 +102,12 @@ const getUserResume = async (req, res) => {
       orderBy: {
         updatedAt: "desc",
       },
+      // include:{
+      //   profileinfo,
+      //   workExperience,
+      //   education,
+      //   skill
+      // }
     });
     if (!resume) {
       return res.status(404).json({ message: "No resume found for user" });
@@ -117,29 +123,42 @@ const getUserResume = async (req, res) => {
 //get resume by id
 const getResumeById = async (req, res) => {
   try {
-    const { resumeId } = req.params.id;
+    const resumeId = req.params.id; 
+    console.log("dfsssssssssssssssssssssssssssssssssssssss", resumeId)
+    const userId = req.user.userId;
+
+    if (!resumeId || isNaN(resumeId)) {
+      return res.status(400).json({ message: "Invalid resume ID" });
+    }
+
     const resume = await prisma.resume.findFirst({
       where: {
-        id: resumeId,
-        userId: req.user.userId,
+        resumeId: Number(resumeId),  
+      },
+      include: {
+        Profileinfo: true,
+        WorkExperience: true,
+        Education: true,
+        Skill: true,
       },
     });
 
     if (!resume) {
-      return res.status(404).json({ message: "No resume found for user" });
+      return res.status(404).json({ message: "No resume found for this user" });
     }
 
     return res.status(200).json({ resume });
   } catch (error) {
-    console.error("Error fetching resume:", error);
+    console.error("Error fetching resume by ID:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-
 const updateResume = async (req, res) => {
   try {
     const { resumeId } = req.params;
+    const userId = req.user.userId;
+
     const {
       title,
       color = "",
@@ -159,12 +178,13 @@ const updateResume = async (req, res) => {
       skills = [],
     } = req.body;
 
-    const userId = req.user.userId;
+    console.log("Resume ID:", resumeId);
+    console.log("Update Data:", req.body);
 
-    // verify resume belongs to user
+    // Ensure resume exists and belongs to the user
     const existingResume = await prisma.resume.findFirst({
       where: {
-        id: resumeId,
+        resumeId: Number(resumeId),
         userId,
       },
       include: {
@@ -179,15 +199,15 @@ const updateResume = async (req, res) => {
       return res.status(404).json({ message: "Resume not found" });
     }
 
-    // Delete existing multiple/nested records
-    await prisma.profileinfo.deleteMany({ where: { resumeId } });
-    await prisma.workExperience.deleteMany({ where: { resumeId } });
-    await prisma.education.deleteMany({ where: { resumeId } });
-    await prisma.skill.deleteMany({ where: { resumeId } });
+    // Delete old nested records
+    await prisma.profileinfo.deleteMany({ where: { resumeId: Number(resumeId) } });
+    await prisma.workExperience.deleteMany({ where: { resumeId: Number(resumeId) } });
+    await prisma.education.deleteMany({ where: { resumeId: Number(resumeId) } });
+    await prisma.skill.deleteMany({ where: { resumeId: Number(resumeId) } });
 
     // Update the resume and re-create nested data
     const updatedResume = await prisma.resume.update({
-      where: { id: resumeId },
+      where: { resumeId: Number(resumeId) },
       data: {
         title,
         color,
@@ -245,6 +265,7 @@ const updateResume = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   createResume,
